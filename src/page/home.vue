@@ -1,11 +1,15 @@
 <template>
     <div class="home_container">
-        萌萌哒
+        <common father-component="home"></common>
     </div>
 </template>
 <script>
+import Common from '@/components/common'
 export default {
-    name: 'home'
+    name: 'home',
+    components: {
+        Common
+    }
 }
 </script>
 <style lang="less" scoped>
