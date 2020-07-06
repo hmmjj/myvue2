@@ -8,10 +8,10 @@
             <div class="home_logo item_container"></div>
             <router-link to="/item" class="start button_style"></router-link>
         </div>
-        <div v-if="fatherComponent='item'">
+        <div v-if="fatherComponent=='item'">
             <div class="item_back item_container">
                 <div class="item_list_container">
-                    <header class="item_title">哈哈哈哈</header>、
+                    <header class="item_title">哈哈哈哈</header>
                     <ul>
                         <li class="item_list">
                             <span class="option_style">A</span>
@@ -22,13 +22,23 @@
             </div>
         </div>
         <span class="next_item button_style"></span>
-        <!-- <span class="submit_item button_style"></span> -->
+        <span class="submit_item button_style" @click="submitAnswer"></span>
     </section>
 </template>
 <script>
 export default {
     name: 'common',
-    props: ['fatherComponent']
+    props: ['fatherComponent'],
+    data(){
+        return {
+
+        }
+    },
+    methods: {
+        submitAnswer(){
+            this.$router.push('/score');
+        }
+    }
 }
 </script>
 <style lang="less" scoped>
