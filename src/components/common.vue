@@ -1,42 +1,62 @@
 <template>
     <section>
         <header class="top_tips">
-            <span class="num_tip" v-if="fatherComponent == 'home'">第一周</span>
-            <span class="num_tip" v-if="fatherComponent == 'item'">11</span>
+            <span class="num_tip" v-if="fatherComponent == 'home'">{{level}}</span>
+            <span class="num_tip" v-if="fatherComponent == 'item'">题目{{itemNum}}</span>
         </header>
         <div v-if="fatherComponent == 'home'">
             <div class="home_logo item_container"></div>
-            <router-link to="/item" class="start button_style"></router-link>
+            <router-link to="item" class="start button_style"></router-link>
         </div>
-        <div v-if="fatherComponent=='item'">
+        <div v-if="fatherComponent == 'item'">
             <div class="item_back item_container">
-                <div class="item_list_container">
-                    <header class="item_title">哈哈哈哈</header>
+                <div class="item_list_container" v-if="itemDetail.length > 0">
+                    <header class="item_title">{{itemDetail[itemNum-1].topic_name}}</header>
                     <ul>
-                        <li class="item_list">
-                            <span class="option_style">A</span>
-                            <span class="option_detail">我是正确答案</span>
+                        <li class="item_list" v-for="(item,index) in itemDetail[itemNum-1].topic_answer" @click="choosed(index)" :key="index">
+                            <span class="option_style" :class="{'has_choosed':choosedNum == index}">{{chooseType(index)}}</span>
+                            <span class="option_detail">{{item.answer_name}}</span>
                         </li>
                     </ul>
                 </div>
             </div>
+            <span class="next_item button_style" v-if="itemNum < itemDetail.length"></span>
+            <span class="submit_item button_style" v-else @click="submitAnswer"></span>
         </div>
-        <span class="next_item button_style"></span>
-        <span class="submit_item button_style" @click="submitAnswer"></span>
     </section>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
     name: 'common',
     props: ['fatherComponent'],
     data(){
         return {
-
+           choosedNum: null, //选中答案索引
         }
     },
+    computed: mapState([
+        'level', //第几周
+        'itemNum', //第几题
+        'itemDetail', //题目详情
+    ]),
     methods: {
+        // 选项选中状态
+        choosed(index){
+            this.choosedNum = index;
+        },
+        // 点击提交按钮 跳转到分数页
         submitAnswer(){
             this.$router.push('/score');
+        },
+        // 选项 ABCD
+        chooseType(index){
+            switch(index){
+                case 0: return 'A';
+                case 1: return 'B';
+                case 2: return 'C';
+                case 3: return 'D';
+            }
         }
     }
 }
