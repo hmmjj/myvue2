@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
+const ADD_ITEMNUM = 'ADD_ITEMNUM'
+const REMBER_ANSWER = 'REMBER_ANSWER'
+const REMBER_TIME = 'REMBER_TIME'
+const INITIALIZE_DATA = 'INITIALIZE_DATA'
 const store = new Vuex.Store({
     state: {
         level: '第一周', //活动周数
@@ -165,6 +169,29 @@ const store = new Vuex.Store({
             }]
         }],
         answerid: [], //答案id
+    },
+    actions: {
+        addNum({commit,state},id){
+            commit('REMBER_ANSWER', id);
+            if(state.itemNum < state.itemDetail.length){
+                commit('ADD_ITEMNUM', 1);
+            }
+        }
+    },
+    mutations: {
+        //点击进入下一题
+        [ADD_ITEMNUM](state, num){
+            state.itemNum += num;
+        },
+        //记录答案
+        [REMBER_ANSWER](state, id){
+            state.answerid.push(id)
+        },
+        //初始化信息
+        [INITIALIZE_DATA](state){
+            state.itemNum = 1;
+            state.answerid = [];
+        }
     }
 })
 

@@ -13,26 +13,27 @@
                 <div class="item_list_container" v-if="itemDetail.length > 0">
                     <header class="item_title">{{itemDetail[itemNum-1].topic_name}}</header>
                     <ul>
-                        <li class="item_list" v-for="(item,index) in itemDetail[itemNum-1].topic_answer" @click="choosed(index)" :key="index">
+                        <li class="item_list" v-for="(item,index) in itemDetail[itemNum-1].topic_answer" @click="choosed(index,item.topic_answer_id)" :key="index">
                             <span class="option_style" :class="{'has_choosed':choosedNum == index}">{{chooseType(index)}}</span>
                             <span class="option_detail">{{item.answer_name}}</span>
                         </li>
                     </ul>
                 </div>
             </div>
-            <span class="next_item button_style" v-if="itemNum < itemDetail.length"></span>
+            <span class="next_item button_style" @click="nextItem" v-if="itemNum < itemDetail.length"></span>
             <span class="submit_item button_style" v-else @click="submitAnswer"></span>
         </div>
     </section>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'common',
     props: ['fatherComponent'],
     data(){
         return {
            choosedNum: null, //选中答案索引
+           choosedId: null //选中答案id
         }
     },
     computed: mapState([
@@ -41,13 +42,29 @@ export default {
         'itemDetail', //题目详情
     ]),
     methods: {
+        ...mapActions(['addNum']),
         // 选项选中状态
-        choosed(index){
+        choosed(index, id){
             this.choosedNum = index;
+            this.choosedId = id;
+        },
+        nextItem(){
+            if(this.choosedNum !== null){
+                this.choosedNum = null;
+                //保存答案，题目索引加一，跳到下一题
+                this.addNum(this.choosedId)
+            }else {
+                alert('您还没有选择答案哦！！！')
+            }
         },
         // 点击提交按钮 跳转到分数页
         submitAnswer(){
-            this.$router.push('/score');
+            if (this.choosedNum !== null) {
+	  			this.addNum(this.choosedId)
+	  			this.$router.push('score')
+  			}else{
+  				alert('您还没有选择答案哦')
+  			}
         },
         // 选项 ABCD
         chooseType(index){

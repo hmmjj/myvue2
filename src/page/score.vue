@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="score_container">
-            <header class="your_scores"><span class="score_num">20</span><span class="fenshu">分！</span></header>
-            <div class="result_tip">哈哈哈哈哈</div>
+            <header class="your_scores"><span class="score_num">{{score}}</span><span class="fenshu">分！</span></header>
+            <div class="result_tip">{{scoreTips}}</div>
         </div>
         <div class="share_button" @click="showCover"></div>
         <div class="share_code">
@@ -15,16 +15,37 @@
     </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 export default {
     name: 'score',
     data(){
         return {
-            showHide: false,
+            showHide: false, //是否显示提示
+            score: 0, //分数
+            scoreTips: '', //分数提示
+            rightAnswer: [2,7,12,13,18], //正确答案
+            scoreTipsArr: ['你说，是不是把知识都还给小学老师了？','还不错，但还需要继续加油哦！','不要嘚瑟还有进步的空间！','智商离爆表只差一步了！','你也太聪明啦，葡萄之家欢迎你！']
         }
+    },
+    computed: mapState(['answerid']),
+    created(){
+        this.computedScore();
+        this.getScoreTip();
     },
     methods: {
         showCover(){
             this.showHide = !this.showHide;
+        },
+        computedScore(){
+            this.answerid.forEach((item,index)=>{
+                if(item == this.rightAnswer[index]){
+                    this.score += 20;
+                }
+            })
+        },
+        getScoreTip(){
+            let index = Math.ceil(this.score/20)-1;
+            this.scoreTips = this.scoreTipsArr[index];
         }
     }
 }
@@ -32,6 +53,7 @@ export default {
 <style lang="less">
 body {
     background-image: url(../assets/images/4-1.jpg);
+    padding-top: 1.2rem;
 }
 .score_container {
     position: relative;
